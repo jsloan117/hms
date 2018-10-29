@@ -2,7 +2,7 @@
 # Cookbook:: hms
 # Spec:: server_setup
 #
-# Copyright:: 2018, The Authors, All Rights Reserved.
+# Copyright:: 2018, Jonathan Sloan, GPL-3.0.
 
 require 'spec_helper'
 
