@@ -24,12 +24,15 @@ default['hms']['docker']['dns_servers'] = %w(1.1.1.1 1.0.0.1)
 default['hms']['docker']['network_name'] = 'mediaservices'
 
 default['hms']['transmission-openvpn']['container_name'] = 'transmission-openvpn'
+default['hms']['transmission-openvpn']['hostname'] = 'transmission-openvpn'
 default['hms']['transmission-openvpn']['network_mode'] = 'mediaservices'
 default['hms']['transmission-openvpn']['restart_policy'] = 'always'
-default['hms']['transmission-openvpn']['command'] = '--cleanup -i 300'
+default['hms']['transmission-openvpn']['command'] = ''
 default['hms']['transmission-openvpn']['cap_add'] = 'NET_ADMIN'
 default['hms']['transmission-openvpn']['devices'] = '/dev/net/tun'
 default['hms']['transmission-openvpn']['env_file'] = '/data2/docker/envfiles/transmission-openvpn'
+default['hms']['transmission-openvpn']['log_driver'] = 'json-file'
+default['hms']['transmission-openvpn']['log_opts'] = 'max-size=10m'
 default['hms']['transmission-openvpn']['port'] = [
   '7000:7000/tcp',
   '9091:9091/tcp',
@@ -42,21 +45,22 @@ default['hms']['transmission-openvpn']['volumes'] = [
   '/etc/resolvconf:/etc/resolv.conf:ro',
 ]
 
-default['hms']['sabnzbd']['container_name'] = 'watchtower'
+default['hms']['sabnzbd']['container_name'] = 'sabnzbd'
+default['hms']['sabnzbd']['hostname'] = 'sabnzbd'
 default['hms']['sabnzbd']['network_mode'] = "container:#{node['hms']['transmission-openvpn']['container_name']}"
 default['hms']['sabnzbd']['restart_policy'] = 'always'
-default['hms']['sabnzbd']['command'] = '--cleanup -i 300'
+default['hms']['sabnzbd']['command'] = ''
 default['hms']['sabnzbd']['env_file'] = '/data2/docker/envfiles/sabnzbd'
 default['hms']['sabnzbd']['volumes'] = [
   '/data2/docker/sabnzbd:/config',
   '/data/torrents/downloaded:/downloaded',
   '/data/torrents/downloading:/downloading',
   '/etc/localtime:/etc/localtime:ro',
-  '/etc/localtime:/etc/localtime:ro',
   '/etc/resolvconf:/etc/resolv.conf:ro',
 ]
 
 default['hms']['watchtower']['container_name'] = 'watchtower'
+default['hms']['watchtower']['hostname'] = 'watchtower'
 default['hms']['watchtower']['network_mode'] = 'watchtower'
 default['hms']['watchtower']['restart_policy'] = 'always'
 default['hms']['watchtower']['command'] = '--cleanup -i 300'
