@@ -18,6 +18,10 @@ package_list.each do |pkg|
   end
 end
 
+service 'atopd' do
+  action [:enable, :start]
+end
+
 yumgroup 'Development tools' do
   action :install
 end

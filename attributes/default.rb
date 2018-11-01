@@ -4,6 +4,8 @@
 #
 # Copyright:: 2018, Jonathan Sloan, GPL-3.0.
 default['hms']['data_bag_secret_path'] = '/etc/chef/encrypted_data_bag_secret'
+default['hms']['media_user_name'] = 'mediaadm'
+default['hms']['media_user_comment'] = 'MediaServerServices'
 default['hms']['media_group_name'] = 'mediaadms'
 default['hms']['admin_group_gid'] = '1001'
 default['hms']['default_user_shell'] = '/sbin/nologin'
@@ -80,3 +82,30 @@ default['hms']['docker']['image_list'] = %w(
   linuxserver/deluge
   diaoulael/subliminal
 )
+
+default['hms']['apcupsd']['conf']['UPSCABLE'] = 'usb'
+default['hms']['apcupsd']['conf']['UPSTYPE'] = 'usb'
+default['hms']['apcupsd']['conf']['DEVICE'] = ''
+default['hms']['apcupsd']['conf']['LOCKFILE'] = '/var/lock'
+default['hms']['apcupsd']['conf']['SCRIPTDIR'] = '/etc/apcupsd'
+default['hms']['apcupsd']['conf']['PWRFAILDIR'] = '/etc/apcupsd'
+default['hms']['apcupsd']['conf']['NOLOGINDIR'] = '/etc'
+default['hms']['apcupsd']['conf']['ONBATTERYDELAY'] = '6'
+default['hms']['apcupsd']['conf']['BATTERYLEVEL'] = '5'
+default['hms']['apcupsd']['conf']['MINUTES'] = '3'
+default['hms']['apcupsd']['conf']['TIMEOUT'] = '0'
+default['hms']['apcupsd']['conf']['ANNOY'] = '300'
+default['hms']['apcupsd']['conf']['ANNOYDELAY'] = '60'
+default['hms']['apcupsd']['conf']['NOLOGON'] = 'disable'
+default['hms']['apcupsd']['conf']['KILLDELAY'] = '0'
+default['hms']['apcupsd']['conf']['NETSERVER'] = 'on'
+default['hms']['apcupsd']['conf']['NISIP'] = '0.0.0.0'
+default['hms']['apcupsd']['conf']['NISPORT'] = '3551'
+default['hms']['apcupsd']['conf']['EVENTSFILE'] = '/var/log/apcupsd.events'
+default['hms']['apcupsd']['conf']['EVENTSFILEMAX'] = '10'
+default['hms']['apcupsd']['conf']['UPSCLASS'] = 'standalone'
+default['hms']['apcupsd']['conf']['UPSMODE'] = 'disable'
+default['hms']['apcupsd']['conf']['STATTIME'] = '0'
+default['hms']['apcupsd']['conf']['STATEFILE'] = '/var/log/apcupsd.status'
+default['hms']['apcupsd']['conf']['LOGSTATS'] = 'off'
+default['hms']['apcupsd']['conf']['DATATIME'] = '0'
