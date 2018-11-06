@@ -18,13 +18,22 @@ package_list.each do |pkg|
   end
 end
 
-service 'atopd' do
-  action [:enable, :start]
+services_list = %w(atopd smartd hddtemp httpd)
+services_list.each do |services|
+  service services do
+    action [:enable, :start]
+  end
 end
 
 yumgroup 'Development tools' do
   action :install
 end
+
+# May or may not be needed?
+# execute 'recreate_raid' do
+#  command 'mdadm -Ds > /etc/mdadm.conf'
+#  action :run
+# end
 
 user node['hms']['media_user_name'] do
   comment node['hms']['comment']
@@ -127,9 +136,5 @@ template '/etc/apcupsd/apcupsd.conf' do
 end
 
 service 'apcupsd' do
-  action [:enable, :start]
-end
-
-service 'httpd' do
   action [:enable, :start]
 end

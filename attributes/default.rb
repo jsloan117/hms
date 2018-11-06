@@ -14,6 +14,23 @@ default['hms']['directory_owner'] = 'root'
 default['hms']['file_mode'] = '0640'
 default['hms']['file_owner'] = 'root'
 default['hms']['timezone'] = 'America/Chicago'
+default['hms']['mediadirlist'] = [
+  '/data',
+  '/data/plexmediaserver',
+  '/data/plexmediaserver/movies',
+  '/data/plexmediaserver/tvshows',
+  '/data/plexmediaserver/music',
+  '/data2',
+  '/data2/plexmediaserver',
+  '/data2/plexmediaserver/movies',
+  '/data2/plexmediaserver/tvshows',
+]
+default['hms']['transmissiondirlist'] = [
+  '/data/torrents',
+  '/data/torrents/torrents',
+  '/data/torrents/downloaded',
+  '/data/torrents/downloading',
+]
 
 default['hms']['package_list'] = %w(
   atop
@@ -21,6 +38,25 @@ default['hms']['package_list'] = %w(
   nano
   conntrack-tools
   httpd
+  httpd-devel
+  net-tools
+  usbutils
+  bind-utils
+  pciutils
+  yum-utils
+  lm_sensors
+  hddtemp
+  smartmontools
+  mc
+  tree
+  psutils
+  ncdu
+  p7zip
+  mdadm
+  wget
+  curl
+  xinetd
+  mlocate
 )
 
 default['hms']['docker']['dns_servers'] = %w(1.1.1.1 1.0.0.1)
@@ -87,9 +123,11 @@ default['hms']['docker']['image_list'] = %w(
   diaoulael/subliminal
 )
 
+default['hms']['apcupsd']['conf']['UPSNAME'] = 'MainUPS'
 default['hms']['apcupsd']['conf']['UPSCABLE'] = 'usb'
 default['hms']['apcupsd']['conf']['UPSTYPE'] = 'usb'
 default['hms']['apcupsd']['conf']['DEVICE'] = ''
+default['hms']['apcupsd']['conf']['POLLTIME'] = '60'
 default['hms']['apcupsd']['conf']['LOCKFILE'] = '/var/lock'
 default['hms']['apcupsd']['conf']['SCRIPTDIR'] = '/etc/apcupsd'
 default['hms']['apcupsd']['conf']['PWRFAILDIR'] = '/etc/apcupsd'
@@ -105,11 +143,11 @@ default['hms']['apcupsd']['conf']['KILLDELAY'] = '0'
 default['hms']['apcupsd']['conf']['NETSERVER'] = 'on'
 default['hms']['apcupsd']['conf']['NISIP'] = '0.0.0.0'
 default['hms']['apcupsd']['conf']['NISPORT'] = '3551'
-default['hms']['apcupsd']['conf']['EVENTSFILE'] = '/var/log/apcupsd.events'
+default['hms']['apcupsd']['conf']['EVENTSFILE'] = '/var/log/apcupsd/apcupsd.events'
 default['hms']['apcupsd']['conf']['EVENTSFILEMAX'] = '10'
 default['hms']['apcupsd']['conf']['UPSCLASS'] = 'standalone'
 default['hms']['apcupsd']['conf']['UPSMODE'] = 'disable'
 default['hms']['apcupsd']['conf']['STATTIME'] = '0'
-default['hms']['apcupsd']['conf']['STATEFILE'] = '/var/log/apcupsd.status'
+default['hms']['apcupsd']['conf']['STATEFILE'] = '/var/log/apcupsd/apcupsd.status'
 default['hms']['apcupsd']['conf']['LOGSTATS'] = 'off'
 default['hms']['apcupsd']['conf']['DATATIME'] = '0'
