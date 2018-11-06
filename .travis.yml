@@ -1,0 +1,14 @@
+branches:
+  only:
+    - master
+language: ruby
+notifications:
+  email: false
+cache: bundler
+rvm:
+- 2.5.1
+env:
+  - CHEF_VERSION=14.3.37
+script:
+- bundle exec cookstyle
+- bundle exec foodcritic -f any .
