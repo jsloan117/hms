@@ -2,7 +2,22 @@
 # Cookbook:: hms
 # Recipe:: server_setup
 #
-# Copyright:: 2018, Jonathan Sloan, GPL-3.0.
+# Copyright:: 2018, Jonathan Sloan, GPL v3.
+timezone 'set_timezone' do
+  timezone node['hms']['timezone']
+  action :set
+end
+
+hostname 'set_hostname' do
+  hostname node['hms']['hostname']
+  action :set
+end
+
+# may just need to do a service chronyd check/start
+execute 'configure_ntp' do
+  command 'timedatectl set-ntp true'
+  action :run
+end
 
 execute 'yum_update_all' do
   command 'yum update -y'
@@ -18,7 +33,7 @@ package_list.each do |pkg|
   end
 end
 
-services_list = %w(atopd smartd hddtemp httpd)
+services_list = %w(atopd smartd hddtemp httpd vnstat)
 services_list.each do |services|
   service services do
     action [:enable, :start]
@@ -35,10 +50,17 @@ end
 #  action :run
 # end
 
+user 'jsloan' do
+  comment 'Jonathan Sloan'
+  home '/home/jsloan'
+  shell '/bin/bash'
+  password 'password'
+  action :create
+end
+
 user node['hms']['media_user_name'] do
   comment node['hms']['comment']
-  uid 'uid'
-  gid 'gid'
+  manage_home false
   home node['hms']['homedir_path']
   shell node['hms']['default_shell']
   system node['hms']['sysuser']
@@ -47,8 +69,9 @@ user node['hms']['media_user_name'] do
 end
 
 group node['hms']['media_group_name'] do
-  members node['hms']['mediagroupies']
+  members ["node['hms']['mediagroupies']", 'jsloan']
   system node['hms']['sysgrp']
+  append true
   action :create
 end
 
@@ -57,7 +80,7 @@ media_directory_list.each do |mdir_list|
   directory mdir_list do
     owner 'plex'
     group node['hms']['media_group_name']
-    mode '0755'
+    mode '0770'
     action :create
   end
 end
@@ -67,9 +90,17 @@ transmission_directory_list.each do |tdir_list|
   directory tdir_list do
     owner node['hms']['media_user_name']
     group node['hms']['media_group_name']
-    mode '0755'
+    mode '0770'
     action :create
   end
+end
+
+remote_file '/usr/local/bin/ctop' do
+  source 'https://github.com/bcicen/ctop/releases/download/v0.7.1/ctop-0.7.1-linux-amd64'
+  owner 'root'
+  group 'root'
+  mode '0755'
+  action :create
 end
 
 package 'docker'

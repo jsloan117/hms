@@ -2,7 +2,7 @@
 # Cookbook:: hms
 # Recipe:: default
 #
-# Copyright:: 2018, Jonathan Sloan, GPL-3.0.
+# Copyright:: 2018, Jonathan Sloan, GPL v3.
 error = ''
 
 def recipe_list

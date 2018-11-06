@@ -2,17 +2,21 @@
 # Cookbook:: hms
 # Recipe:: server_setup
 #
-# Copyright:: 2018, Jonathan Sloan, GPL-3.0.
+# Copyright:: 2018, Jonathan Sloan, GPL v3.
 default['hms']['data_bag_secret_path'] = '/etc/chef/encrypted_data_bag_secret'
 default['hms']['media_user_name'] = 'mediaadm'
 default['hms']['media_user_comment'] = 'MediaServerServices'
+default['hms']['sysuser'] = true
+default['hms']['homedir_path'] = '/home/mediaadm'
 default['hms']['media_group_name'] = 'mediaadms'
+default['hms']['sysgrp'] = true
 default['hms']['admin_group_gid'] = '1001'
 default['hms']['default_user_shell'] = '/sbin/nologin'
-default['hms']['directory_mode'] = '0750'
+default['hms']['directory_mode'] = '0770'
 default['hms']['directory_owner'] = 'root'
 default['hms']['file_mode'] = '0640'
 default['hms']['file_owner'] = 'root'
+default['hms']['hostname'] = 'linda058.macksarchive.com'
 default['hms']['timezone'] = 'America/Chicago'
 default['hms']['mediadirlist'] = [
   '/data',
@@ -57,6 +61,7 @@ default['hms']['package_list'] = %w(
   curl
   xinetd
   mlocate
+  vnstat
 )
 
 default['hms']['docker']['dns_servers'] = %w(1.1.1.1 1.0.0.1)
