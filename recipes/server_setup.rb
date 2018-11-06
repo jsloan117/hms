@@ -33,7 +33,7 @@ package_list.each do |pkg|
   end
 end
 
-services_list = %w(atopd smartd hddtemp httpd vnstat)
+services_list = %w(atopd smartd hddtemp httpd vnstat apcupsd)
 services_list.each do |services|
   service services do
     action [:enable, :start]
@@ -153,19 +153,10 @@ docker_container node['hms']['watchtower']['container_name'] do
   action :run
 end
 
-ups_package_list = %w(apcupsd apcupsd-cgi)
-ups_package_list.each do |pkg|
-  package pkg
-end
-
 template '/etc/apcupsd/apcupsd.conf' do
   source 'apcupsd.conf.erb'
   owner 'root'
   group 'root'
   mode '644'
   action :create
-end
-
-service 'apcupsd' do
-  action [:enable, :start]
 end

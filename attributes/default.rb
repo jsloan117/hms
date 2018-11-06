@@ -62,6 +62,8 @@ default['hms']['package_list'] = %w(
   xinetd
   mlocate
   vnstat
+  apcupsd
+  apcupsd-cgi
 )
 
 default['hms']['docker']['dns_servers'] = %w(1.1.1.1 1.0.0.1)
