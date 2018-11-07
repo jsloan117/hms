@@ -52,7 +52,7 @@ yumgroup 'Development tools' do
   action :install
 end
 
-# May or may not be needed?/exist? or zero? 
+# May or may not be needed?
 # execute 'recreate_raid' do
 #  command 'mdadm -Ds > /etc/mdadm.conf'
 #  action :run
