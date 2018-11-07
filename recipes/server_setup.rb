@@ -33,6 +33,14 @@ package_list.each do |pkg|
   end
 end
 
+template '/etc/apcupsd/apcupsd.conf' do
+  source 'apcupsd.conf.erb'
+  owner 'root'
+  group 'root'
+  mode '644'
+  action :create
+end
+
 services_list = %w(atopd smartd hddtemp httpd vnstat apcupsd)
 services_list.each do |services|
   service services do
@@ -44,10 +52,11 @@ yumgroup 'Development tools' do
   action :install
 end
 
-# May or may not be needed?
+# May or may not be needed?/exist? or zero? 
 # execute 'recreate_raid' do
 #  command 'mdadm -Ds > /etc/mdadm.conf'
 #  action :run
+#  only_if { File.zero?('/etc/mdadm.conf') }
 # end
 
 user 'jsloan' do
@@ -151,12 +160,4 @@ docker_container node['hms']['watchtower']['container_name'] do
   restart_policy node['hms']['watchtower']['restart_policy']
   dns node['hms']['docker']['dns_servers']
   action :run
-end
-
-template '/etc/apcupsd/apcupsd.conf' do
-  source 'apcupsd.conf.erb'
-  owner 'root'
-  group 'root'
-  mode '644'
-  action :create
 end
