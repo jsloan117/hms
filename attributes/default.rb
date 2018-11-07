@@ -37,33 +37,8 @@ default['hms']['transmissiondirlist'] = [
 ]
 
 default['hms']['package_list'] = %w(
-  atop
-  vim
-  nano
-  conntrack-tools
-  httpd
-  httpd-devel
-  net-tools
-  usbutils
-  bind-utils
-  pciutils
-  yum-utils
-  lm_sensors
-  hddtemp
-  smartmontools
-  mc
-  tree
-  psutils
-  ncdu
-  p7zip
-  mdadm
-  wget
-  curl
-  xinetd
-  mlocate
-  vnstat
-  apcupsd
-  apcupsd-cgi
+  atop vim nano conntrack-tools httpd httpd-devel net-tools usbutils bind-utils pciutils yum-utils lm_sensors
+  hddtemp smartmontools mc tree psutils ncdu p7zip mdadm wget curl xinetd mlocate vnstat apcupsd apcupsd-cgi
 )
 
 default['hms']['docker']['dns_servers'] = %w(1.1.1.1 1.0.0.1)
