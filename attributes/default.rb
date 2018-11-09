@@ -98,6 +98,8 @@ default['hms']['docker']['image_list'] = %w(
   v2tec/watchtower
   haugene/transmission-openvpn
   linuxserver/sabnzbd
+  sickchill/sickchill
+  theotherp/nzbhydra2
   linuxserver/jackett
   linuxserver/tautulli
   splunk/splunk
