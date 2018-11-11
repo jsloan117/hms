@@ -124,6 +124,9 @@ docker_image_list.each do |image|
 end
 
 docker_network node['hms']['docker']['network_name'] do
+  subnet '172.18.0.0/16'
+  gateway '172.18.0.1'
+  ip_range '172.18.0.0/16'
   action :create
 end
 
@@ -134,14 +137,26 @@ docker_volume_list.each do |volume|
   end
 end
 
-docker_container node['hms']['transmission-openvpn']['container_name'] do
-  host_name node['hms']['transmission-openvpn']['hostname']
-  network_mode node['hms']['transmission-openvpn']['network_mode']
-  repo node['hms']['transmission-openvpn']['repo']
-  env_file node['hms']['transmission-openvpn']['env_file']
-  volumes node['hms']['transmission-openvpn']['volumes']
-  restart_policy node['hms']['transmission-openvpn']['restart_policy']
-  port node['hms']['transmission-openvpn']['ports']
+docker_container node['hms']['openvpn_client']['container_name'] do
+  host_name node['hms']['openvpn_client']['hostname']
+  network_mode node['hms']['openvpn_client']['network_mode']
+  repo node['hms']['openvpn_client']['repo']
+  env_file node['hms']['openvpn_client']['env_file']
+  volumes node['hms']['openvpn_client']['volumes']
+  restart_policy node['hms']['openvpn_client']['restart_policy']
+  ip_address node['hms']['openvpn_client']['ip_address']
+  port node['hms']['openvpn_client']['ports']
+  dns node['hms']['docker']['dns_servers']
+  action :run
+end
+
+docker_container node['hms']['deluge']['container_name'] do
+  host_name node['hms']['deluge']['hostname']
+  network_mode node['hms']['deluge']['network_mode']
+  repo node['hms']['deluge']['repo']
+  env node['hms']['deluge']['env']
+  volumes node['hms']['deluge']['volumes']
+  restart_policy node['hms']['deluge']['restart_policy']
   dns node['hms']['docker']['dns_servers']
   action :run
 end
@@ -150,10 +165,48 @@ docker_container node['hms']['sabnzbd']['container_name'] do
   host_name node['hms']['sabnzbd']['hostname']
   network_mode node['hms']['sabnzbd']['network_mode']
   repo node['hms']['sabnzbd']['repo']
-  env_file node['hms']['sabnzbd']['env_file']
+  env node['hms']['sabnzbd']['env']
   volumes node['hms']['sabnzbd']['volumes']
   restart_policy node['hms']['sabnzbd']['restart_policy']
-  port node['hms']['sabnzbd']['ports']
+  dns node['hms']['docker']['dns_servers']
+  action :run
+end
+
+docker_container node['hms']['sickchill']['container_name'] do
+  host_name node['hms']['sickchill']['hostname']
+  network_mode node['hms']['sickchill']['network_mode']
+  repo node['hms']['sickchill']['repo']
+  env node['hms']['sickchill']['env']
+  volumes node['hms']['sickchill']['volumes']
+  restart_policy node['hms']['sickchill']['restart_policy']
+  ip_address node['hms']['sickchill']['ip_address']
+  port node['hms']['sickchill']['ports']
+  dns node['hms']['docker']['dns_servers']
+  action :run
+end
+
+docker_container node['hms']['nzbhydra2']['container_name'] do
+  host_name node['hms']['nzbhydra2']['hostname']
+  network_mode node['hms']['nzbhydra2']['network_mode']
+  repo node['hms']['nzbhydra2']['repo']
+  env node['hms']['nzbhydra2']['env']
+  volumes node['hms']['nzbhydra2']['volumes']
+  restart_policy node['hms']['nzbhydra2']['restart_policy']
+  ip_address node['hms']['nzbhydra2']['ip_address']
+  port node['hms']['nzbhydra2']['ports']
+  dns node['hms']['docker']['dns_servers']
+  action :run
+end
+
+docker_container node['hms']['jackett']['container_name'] do
+  host_name node['hms']['jackett']['hostname']
+  network_mode node['hms']['jackett']['network_mode']
+  repo node['hms']['jackett']['repo']
+  env node['hms']['jackett']['env']
+  volumes node['hms']['jackett']['volumes']
+  restart_policy node['hms']['jackett']['restart_policy']
+  ip_address node['hms']['jackett']['ip_address']
+  port node['hms']['jackett']['ports']
   dns node['hms']['docker']['dns_servers']
   action :run
 end
@@ -165,6 +218,16 @@ docker_container node['hms']['watchtower']['container_name'] do
   repo node['hms']['watchtower']['repo']
   volumes node['hms']['watchtower']['volumes']
   restart_policy node['hms']['watchtower']['restart_policy']
+  dns node['hms']['docker']['dns_servers']
+  action :run
+end
+
+docker_container node['hms']['portainer']['container_name'] do
+  host_name node['hms']['portainer']['hostname']
+  network_mode node['hms']['portainer']['network_mode']
+  repo node['hms']['portainer']['repo']
+  volumes node['hms']['portainer']['volumes']
+  restart_policy node['hms']['portainer']['restart_policy']
   dns node['hms']['docker']['dns_servers']
   action :run
 end
