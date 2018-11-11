@@ -43,26 +43,41 @@ default['hms']['package_list'] = %w(
 
 default['hms']['docker']['dns_servers'] = %w(1.1.1.1 1.0.0.1)
 default['hms']['docker']['network_name'] = 'mediaservices'
+default['hms']['docker']['volumes'] = %w(portainer_data openvpn_data)
 
-default['hms']['transmission-openvpn']['repo'] = 'haugene/transmission-openvpn'
-default['hms']['transmission-openvpn']['container_name'] = 'transmission-openvpn'
-default['hms']['transmission-openvpn']['hostname'] = 'transmission-openvpn'
-default['hms']['transmission-openvpn']['network_mode'] = 'mediaservices'
-default['hms']['transmission-openvpn']['restart_policy'] = 'always'
-default['hms']['transmission-openvpn']['command'] = ''
-default['hms']['transmission-openvpn']['cap_add'] = 'NET_ADMIN'
-default['hms']['transmission-openvpn']['devices'] = '/dev/net/tun'
-default['hms']['transmission-openvpn']['env_file'] = '/data2/docker/envfiles/transmission-openvpn'
-default['hms']['transmission-openvpn']['log_driver'] = 'json-file'
-default['hms']['transmission-openvpn']['log_opts'] = 'max-size=10m'
-default['hms']['transmission-openvpn']['ports'] = [
-  '7000:7000/tcp',
-  '9091:9091/tcp',
+default['hms']['openvpn_client']['repo'] = 'jsloan117/docker-openvpn-client'
+default['hms']['openvpn_client']['container_name'] = 'openvpn_client'
+default['hms']['openvpn_client']['hostname'] = 'openvpn_client'
+default['hms']['openvpn_client']['network_mode'] = 'mediaservices'
+default['hms']['openvpn_client']['restart_policy'] = 'always'
+default['hms']['openvpn_client']['command'] = ''
+default['hms']['openvpn_client']['cap_add'] = 'NET_ADMIN'
+default['hms']['openvpn_client']['devices'] = '/dev/net/tun'
+default['hms']['openvpn_client']['env_file'] = '/data2/docker/envfiles/openvpn_client'
+default['hms']['openvpn_client']['log_driver'] = 'json-file'
+default['hms']['openvpn_client']['log_opts'] = 'max-size=10m'
+default['hms']['openvpn_client']['ports'] = [
+  '7000:8080/tcp',
+  '8112:8112/tcp',
 ]
-default['hms']['transmission-openvpn']['volumes'] = [
-  '/data2/docker/transmission-openvpn:/config',
+default['hms']['openvpn_client']['volumes'] = [
+  '/data2/docker/openvpn_client:/config',
   '/data/torrents/downloaded:/downloaded',
   '/data/torrents/downloading:/downloading',
+  '/etc/localtime:/etc/localtime:ro',
+  '/etc/resolvconf:/etc/resolv.conf:ro',
+]
+
+default['hms']['deluge']['repo'] = 'binhex/arch-deluge'
+default['hms']['deluge']['container_name'] = 'deluge'
+default['hms']['deluge']['hostname'] = 'deluge'
+default['hms']['deluge']['network_mode'] = "container:#{node['hms']['openvpn_client']['container_name']}"
+default['hms']['deluge']['restart_policy'] = 'always'
+default['hms']['deluge']['command'] = ''
+default['hms']['deluge']['env_file'] = '/data2/docker/envfiles/deluge'
+default['hms']['deluge']['volumes'] = [
+  '/data2/docker/deluge:/config',
+  '/data/torrents:/data',
   '/etc/localtime:/etc/localtime:ro',
   '/etc/resolvconf:/etc/resolv.conf:ro',
 ]
@@ -70,7 +85,7 @@ default['hms']['transmission-openvpn']['volumes'] = [
 default['hms']['sabnzbd']['repo'] = 'linuxserver/sabnzbd'
 default['hms']['sabnzbd']['container_name'] = 'sabnzbd'
 default['hms']['sabnzbd']['hostname'] = 'sabnzbd'
-default['hms']['sabnzbd']['network_mode'] = "container:#{node['hms']['transmission-openvpn']['container_name']}"
+default['hms']['sabnzbd']['network_mode'] = "container:#{node['hms']['openvpn_client']['container_name']}"
 default['hms']['sabnzbd']['restart_policy'] = 'always'
 default['hms']['sabnzbd']['command'] = ''
 default['hms']['sabnzbd']['env_file'] = '/data2/docker/envfiles/sabnzbd'
@@ -85,7 +100,7 @@ default['hms']['sabnzbd']['volumes'] = [
 default['hms']['watchtower']['repo'] = 'v2tec/watchtower'
 default['hms']['watchtower']['container_name'] = 'watchtower'
 default['hms']['watchtower']['hostname'] = 'watchtower'
-default['hms']['watchtower']['network_mode'] = 'watchtower'
+default['hms']['watchtower']['network_mode'] = ''
 default['hms']['watchtower']['restart_policy'] = 'always'
 default['hms']['watchtower']['command'] = '--cleanup -i 300'
 default['hms']['watchtower']['volumes'] = [
@@ -94,16 +109,30 @@ default['hms']['watchtower']['volumes'] = [
   '/etc/resolvconf:/etc/resolv.conf:ro',
 ]
 
+default['hms']['portainer']['repo'] = 'portainer/portainer'
+default['hms']['portainer']['container_name'] = 'portainer'
+default['hms']['portainer']['hostname'] = 'portainer'
+default['hms']['portainer']['network_mode'] = ''
+default['hms']['portainer']['restart_policy'] = 'always'
+default['hms']['portainer']['command'] = ''
+default['hms']['portainer']['volumes'] = [
+  '/var/run/docker.sock:/var/run/docker.sock',
+  '/etc/localtime:/etc/localtime:ro',
+  '/etc/resolvconf:/etc/resolv.conf:ro',
+  'portainer_data:/data',
+]
+
 default['hms']['docker']['image_list'] = %w(
+  portainer/portainer
   v2tec/watchtower
-  haugene/transmission-openvpn
+  jsloan117/docker-openvpn-client
+  binhex/arch-deluge
   linuxserver/sabnzbd
   sickchill/sickchill
   theotherp/nzbhydra2
   linuxserver/jackett
   linuxserver/tautulli
   splunk/splunk
-  linuxserver/deluge
   diaoulael/subliminal
 )
 

@@ -127,6 +127,13 @@ docker_network node['hms']['docker']['network_name'] do
   action :create
 end
 
+docker_volume_list = node['hms']['docker']['volumes']
+docker_volume_list.each do |volume|
+  docker_volume volume do
+    action :create
+  end
+end
+
 docker_container node['hms']['transmission-openvpn']['container_name'] do
   host_name node['hms']['transmission-openvpn']['hostname']
   network_mode node['hms']['transmission-openvpn']['network_mode']
