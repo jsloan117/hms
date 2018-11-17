@@ -123,10 +123,15 @@ docker_image_list.each do |image|
   docker_image image
 end
 
-docker_network node['hms']['docker']['network_name'] do
-  subnet '172.18.0.0/16'
-  gateway '172.18.0.1'
-  ip_range '172.18.0.0/16'
+docker_network node['hms']['docker']['networks'][0] do
+  subnet '172.0.0.0/24'
+  gateway '172.0.0.1'
+  action :create
+end
+
+docker_network node['hms']['docker']['networks'][1] do
+  subnet '172.1.0.0/24'
+  gateway '172.1.0.1'
   action :create
 end
 
@@ -146,6 +151,10 @@ docker_container node['hms']['openvpn_client']['container_name'] do
   restart_policy node['hms']['openvpn_client']['restart_policy']
   ip_address node['hms']['openvpn_client']['ip_address']
   port node['hms']['openvpn_client']['ports']
+  devices node['hms']['openvpn_client']['devices']
+  cap_add node['hms']['openvpn_client']['cap_add']
+  log_driver node['hms']['openvpn_client']['log_driver']
+  log_opts node['hms']['openvpn_client']['log_opts']
   dns node['hms']['docker']['dns_servers']
   action :run
 end
@@ -219,6 +228,7 @@ docker_container node['hms']['watchtower']['container_name'] do
   volumes node['hms']['watchtower']['volumes']
   restart_policy node['hms']['watchtower']['restart_policy']
   dns node['hms']['docker']['dns_servers']
+  autoremove true
   action :run
 end
 
@@ -228,6 +238,43 @@ docker_container node['hms']['portainer']['container_name'] do
   repo node['hms']['portainer']['repo']
   volumes node['hms']['portainer']['volumes']
   restart_policy node['hms']['portainer']['restart_policy']
+  port node['hms']['portainer']['ports']
+  dns node['hms']['docker']['dns_servers']
+  action :run
+end
+
+docker_container node['hms']['netdata']['container_name'] do
+  host_name node['hms']['netdata']['hostname']
+  network_mode node['hms']['netdata']['network_mode']
+  repo node['hms']['netdata']['repo']
+  volumes node['hms']['netdata']['volumes']
+  restart_policy node['hms']['netdata']['restart_policy']
+  ip_address node['hms']['netdata']['ip_address']
+  port node['hms']['netdata']['ports']
+  dns node['hms']['docker']['dns_servers']
+  action :run
+end
+
+docker_container node['hms']['prometheus']['container_name'] do
+  host_name node['hms']['prometheus']['hostname']
+  network_mode node['hms']['prometheus']['network_mode']
+  repo node['hms']['prometheus']['repo']
+  volumes node['hms']['prometheus']['volumes']
+  restart_policy node['hms']['prometheus']['restart_policy']
+  ip_address node['hms']['prometheus']['ip_address']
+  port node['hms']['prometheus']['ports']
+  dns node['hms']['docker']['dns_servers']
+  action :run
+end
+
+docker_container node['hms']['grafana']['container_name'] do
+  host_name node['hms']['grafana']['hostname']
+  network_mode node['hms']['grafana']['network_mode']
+  repo node['hms']['grafana']['repo']
+  volumes node['hms']['grafana']['volumes']
+  restart_policy node['hms']['grafana']['restart_policy']
+  ip_address node['hms']['grafana']['ip_address']
+  port node['hms']['grafana']['ports']
   dns node['hms']['docker']['dns_servers']
   action :run
 end

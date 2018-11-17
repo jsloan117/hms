@@ -42,20 +42,21 @@ default['hms']['package_list'] = %w(
 )
 
 default['hms']['docker']['dns_servers'] = %w(1.1.1.1 1.0.0.1)
-default['hms']['docker']['network_name'] = 'mediaservices'
-default['hms']['docker']['volumes'] = %w(portainer_data openvpn_data)
+default['hms']['docker']['networks'] = %w(mediaservices monitoring)
+default['hms']['docker']['volumes'] = %w(netdata openvpn_data portainer_data prometheus_data)
 
 default['hms']['openvpn_client']['repo'] = 'jsloan117/docker-openvpn-client'
 default['hms']['openvpn_client']['container_name'] = 'openvpn_client'
 default['hms']['openvpn_client']['hostname'] = 'openvpn_client'
-default['hms']['openvpn_client']['network_mode'] = "node['hms']['docker']['network_name'].to_s"
+# REVIEW: Not sure if this will work or not regarding the hash/array
+default['hms']['openvpn_client']['network_mode'] = node['hms']['docker']['networks'][0]
 default['hms']['openvpn_client']['restart_policy'] = 'always'
 default['hms']['openvpn_client']['cap_add'] = 'NET_ADMIN'
 default['hms']['openvpn_client']['devices'] = '/dev/net/tun'
 default['hms']['openvpn_client']['env_file'] = '/data2/docker/envfiles/openvpn_client'
 default['hms']['openvpn_client']['log_driver'] = 'json-file'
 default['hms']['openvpn_client']['log_opts'] = 'max-size=10m'
-default['hms']['openvpn_client']['ip_address'] = '172.18.0.2'
+default['hms']['openvpn_client']['ip_address'] = '172.0.0.2'
 default['hms']['openvpn_client']['ports'] = ['7000:8080/tcp', '8112:8112/tcp']
 default['hms']['openvpn_client']['volumes'] = [
   'openvpn_data:/etc/openvpn',
@@ -96,7 +97,7 @@ default['hms']['sickchill']['hostname'] = 'sickchill'
 default['hms']['sickchill']['network_mode'] = "node['hms']['docker']['network_name'].to_s"
 default['hms']['sickchill']['restart_policy'] = 'always'
 default['hms']['sickchill']['env'] = ['PUID=1000', 'PGID=1000']
-default['hms']['sickchill']['ip_address'] = '172.18.0.3'
+default['hms']['sickchill']['ip_address'] = '172.0.0.3'
 default['hms']['sickchill']['ports'] = '4443:8081/tcp'
 default['hms']['sickchill']['volumes'] = [
   '/data2/docker/sickchill:/data',
@@ -112,7 +113,7 @@ default['hms']['nzbhydra2']['hostname'] = 'nzbhydra2'
 default['hms']['nzbhydra2']['network_mode'] = "node['hms']['docker']['network_name'].to_s"
 default['hms']['nzbhydra2']['restart_policy'] = 'always'
 default['hms']['nzbhydra2']['env'] = ['PUID=1000', 'PGID=1000']
-default['hms']['nzbhydra2']['ip_address'] = '172.18.0.4'
+default['hms']['nzbhydra2']['ip_address'] = '172.0.0.4'
 default['hms']['nzbhydra2']['ports'] = '5075:5076/tcp'
 default['hms']['nzbhydra2']['volumes'] = [
   '/data2/docker/nzbhydra2:/data',
@@ -127,7 +128,7 @@ default['hms']['jackett']['hostname'] = 'jackett'
 default['hms']['jackett']['network_mode'] = "node['hms']['docker']['network_name'].to_s"
 default['hms']['jackett']['restart_policy'] = 'always'
 default['hms']['jackett']['env'] = ['PUID=1000', 'PGID=1000']
-default['hms']['jackett']['ip_address'] = '172.18.0.5'
+default['hms']['jackett']['ip_address'] = '172.0.0.5'
 default['hms']['jackett']['ports'] = '9117:9117/tcp'
 default['hms']['jackett']['volumes'] = [
   '/data2/docker/jackett:/config',
@@ -153,9 +154,51 @@ default['hms']['portainer']['container_name'] = 'portainer'
 default['hms']['portainer']['hostname'] = 'portainer'
 default['hms']['portainer']['network_mode'] = ''
 default['hms']['portainer']['restart_policy'] = 'always'
+default['hms']['portainer']['ports'] = '9000:9000/tcp'
 default['hms']['portainer']['volumes'] = [
   '/var/run/docker.sock:/var/run/docker.sock',
   'portainer_data:/data',
+  '/etc/localtime:/etc/localtime:ro',
+  '/etc/resolvconf:/etc/resolv.conf:ro',
+]
+
+default['hms']['netdata']['repo'] = 'titpetric/netdata'
+default['hms']['netdata']['container_name'] = 'netdata'
+default['hms']['netdata']['hostname'] = 'netdata'
+default['hms']['netdata']['network_mode'] = ''
+default['hms']['netdata']['restart_policy'] = 'always'
+default['hms']['netdata']['ip_address'] = '172.1.0.2'
+default['hms']['netdata']['ports'] = '19999:19999/tcp'
+default['hms']['netdata']['volumes'] = [
+  '/proc:/host/proc:ro',
+  '/sys:/host/sys:ro',
+  'netdata:/etc/netdata/override',
+  '/etc/localtime:/etc/localtime:ro',
+  '/etc/resolvconf:/etc/resolv.conf:ro',
+]
+
+default['hms']['prometheus']['repo'] = 'prom/prometheus'
+default['hms']['prometheus']['container_name'] = 'prometheus'
+default['hms']['prometheus']['hostname'] = 'prometheus'
+default['hms']['prometheus']['network_mode'] = ''
+default['hms']['prometheus']['restart_policy'] = 'always'
+default['hms']['prometheus']['ip_address'] = '172.1.0.3'
+default['hms']['prometheus']['ports'] = '9090:9090/tcp'
+default['hms']['prometheus']['volumes'] = [
+  '/data2/docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml',
+  'prometheus_data:/prometheus',
+  '/etc/localtime:/etc/localtime:ro',
+  '/etc/resolvconf:/etc/resolv.conf:ro',
+]
+
+default['hms']['grafana']['repo'] = 'grafana/grafana'
+default['hms']['grafana']['container_name'] = 'grafana'
+default['hms']['grafana']['hostname'] = 'grafana'
+default['hms']['grafana']['network_mode'] = ''
+default['hms']['grafana']['restart_policy'] = 'always'
+default['hms']['grafana']['ip_address'] = '172.1.0.4'
+default['hms']['grafana']['ports'] = '3000:3000/tcp'
+default['hms']['grafana']['volumes'] = [
   '/etc/localtime:/etc/localtime:ro',
   '/etc/resolvconf:/etc/resolv.conf:ro',
 ]
@@ -170,6 +213,9 @@ default['hms']['docker']['image_list'] = %w(
   theotherp/nzbhydra2
   linuxserver/jackett
   linuxserver/tautulli
+  titpetric/netdata
+  prom/prometheus
+  grafana/grafana
   splunk/splunk
   diaoulael/subliminal
 )
